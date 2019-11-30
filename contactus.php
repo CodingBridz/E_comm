@@ -1,3 +1,7 @@
+<?php
+include("includes/db.php");
+include("functions/functions.php");
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,7 +23,7 @@
 					Welcome Guest
 				</a>
 				<a href="#">
-					Shopping Cart Total Price: INR 100, Total Items 2
+					Shopping Cart Total Price: INR <?php totalPrice(); ?>, Total Items <?php item();?>
 				</a>
 			</div>
 			<div class="col-md-6 offer">
@@ -28,7 +32,7 @@
 						<a href="customer_registration.php">Register</a>
 					</li>
 					<li>
-						<a href="checkout.php">My Account</a>
+						<a href="customer/my_account.php">My Account</a>
 					</li>
 					<li>
 						<a href="cart.php"> Go to Cart</a>
@@ -96,7 +100,7 @@
 				</div>
 				<a href="cart.php" class="btn btn-primary navbar-btn right">
 					<i class="fa fa-shopping-cart"></i>
-					<span>4 Items in Cart</span>	
+					<span><?php item();?> Items in Cart</span>	
 				</a>
 				<div class="collapse clearfix" id="search">
 					<form class="navbar-form" method="get" action="result.php">
@@ -171,3 +175,20 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 	</body>
 </html>
+<?php
+if(isset($_POST['sumbit'])){
+$senderName=$_POST['name'];
+$senderEmail=$_POST['email'];
+$senderSubject=$_POST['subject'];
+$senderMessage=$_POST['massage'];
+$receiverEmail="snavi4551@gmail.com";
+mail($receiverEmail,$senderName,$senderSubject,$senderMessage,$senderEmail);
+//cousomer mail
+$email=$_POST['email'];
+$subject="Welcome to our Website";
+$msg="I Shall get you soon and thanks for sending email";
+$from="snavi4551@gmail.com";
+mail($email,$subject,$msg,$from);
+echo "<h2 align='center'>Your mail sent </h2>";
+}
+?>

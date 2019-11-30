@@ -1,3 +1,28 @@
+<?php
+include("includes/db.php");
+include("functions/functions.php");
+?>
+<?php
+if (isset($_GET['pro_id'])) {
+	$pro_id=$_GET['pro_id'];
+	$get_product="select * from products where product_id='$pro_id'";
+	$run_product=mysqli_query($con,$get_product);
+	$row_product=mysqli_fetch_array($run_product);
+	$p_cat_id=$row_product['p_cat_id'];
+	$pro_title=$row_product['product_title'];
+	$pro_price=$row_product['product_price'];
+	$pro_desc=$row_product['product_desc'];
+	$pro_img1=$row_product['product_img1'];
+	$pro_img2=$row_product['product_img2'];
+	$pro_img3=$row_product['product_img3'];
+
+	$get_p_cat="select * from product_categories where p_cat_id='$p_cat_id'";
+	$run_p_cat=mysqli_query($con,$get_p_cat);
+	$row_p_cat=mysqli_fetch_array($run_p_cat);
+	$p_cat_id=$row_p_cat['p_cat_id'];
+	$p_cat_title=$row_p_cat['p_cat_title'];
+}
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,7 +44,7 @@
 					Welcome Guest
 				</a>
 				<a href="#">
-					Shopping Cart Total Price: INR 100, Total Items 2
+					Shopping Cart Total Price: INR <?php totalPrice(); ?>, Total Items <?php item();?>
 				</a>
 			</div>
 			<div class="col-md-6 offer">
@@ -96,7 +121,7 @@
 				</div>
 				<a href="cart.php" class="btn btn-primary navbar-btn right">
 					<i class="fa fa-shopping-cart"></i>
-					<span>4 Items in Cart</span>	
+					<span><?php item();?> Items in Cart</span>	
 				</a>
 				<div class="collapse clearfix" id="search">
 					<form class="navbar-form" method="get" action="result.php">
@@ -121,6 +146,8 @@
 				<ul class="breadcrumb">
 					<li><a href="home.php">Home</a></li>
 					<li>Details</li>
+					<li><a href="shop.php?p_cat=<?php echo $p_cat_id; ?>"><?php echo $p_cat_title; ?></a></li>
+					<li><?php echo $pro_title; ?></li>
 				</ul>
 			</div>
 			<div class="col-md-3">
@@ -141,17 +168,17 @@
 								<div class="carousel-inner"><!-- carousel inner start-->
 									<div class="item active">
 										<center>
-										<img src="admin_area/product_images/product1.jpg" class="img-responsive">
+										<img src="admin_area/product_images/<?php echo $pro_img1; ?>" class="img-responsive">
 										</center>
 									</div>
 									<div class="item">
 										<center>
-										<img src="admin_area/product_images/product2.jpg" class="img-responsive">
+										<img src="admin_area/product_images/<?php echo $pro_img2; ?>" class="img-responsive">
 										</center>
 									</div>
 									<div class="item">
 										<center>
-										<img src="admin_area/product_images/product3.jpg" class="img-responsive">
+										<img src="admin_area/product_images/<?php echo $pro_img3; ?>" class="img-responsive">
 										</center>
 									</div>
 								</div><!-- carousel inner End-->
@@ -168,8 +195,9 @@
 					</div>
 					<div class="col-sm-6">
 						<div class="box">
-						<h1 class="text-center">Men's Printed Fashion Jackets Korean Style</h1>
-							<form action="details.php" method="post" class="form-horizontal">
+						<h1 class="text-center"><?php echo $pro_title; ?></h1>
+						<?php addCart();?>
+							<form action="details.php?add_cart=<?php echo $pro_id; ?>" method="post" class="form-horizontal">
 								<div class="form-group">
 									<label class="col-md-5 control-label">
 										Product Quantity
@@ -198,7 +226,7 @@
 										</select>
 									</div>
 								</div>
-								<p class="price">INR 200</p>
+								<p class="price">INR <?php echo $pro_price; ?></p>
 								<p class="text-center buttons">
 									<button class="btn btn-primary" type="submit">
 										<i class="fa fa-shopping-cart"></i> Add To Cart
@@ -208,24 +236,24 @@
 						</div>
 						<div class="col-xs-4">
 							<a href="#" class="thumb">
-								<img src="admin_area/product_images/product1.jpg" class="img-responsive">
+								<img src="admin_area/product_images/<?php echo $pro_img1; ?>" class="img-responsive">
 							</a>
 						</div>
 						<div class="col-xs-4">
 							<a href="#" class="thumb">
-								<img src="admin_area/product_images/product2.jpg" class="img-responsive">
+								<img src="admin_area/product_images/<?php echo $pro_img2; ?>" class="img-responsive">
 							</a>
 						</div>
 						<div class="col-xs-4">
 							<a href="#" class="thumb">
-								<img src="admin_area/product_images/product3.jpg" class="img-responsive">
+								<img src="admin_area/product_images/<?php echo $pro_img3; ?>" class="img-responsive">
 							</a>
 						</div>
 					</div>
 				</div><!--row End -->
 				<div class="box" id="details">
 					<h4>Product Details</h4>
-					<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
+					<p><?php echo $pro_desc; ?></p>
 					<h4>Size</h4>
 					<ul>
 						<li>Small</li>
@@ -237,42 +265,40 @@
 				<div id="row same-height-row">
 					<div class="col-md-3 col-sm-6">
 						<div class="box same-height headline">
-							<h3 class="text-center">You Also Like These Products</h3>
+							<h3 class="text-center">You May Also Like These Products</h3>
 						</div>
 					</div>
-					<div class="center-responsive col-md-3">
-						<div class="product same-height">
-							<a href="">
-								<img src="admin_area/product_images/product4.jpg" class="img-responsive">
-							</a>
-							<div class="text">
-									<h3><a href="details.php">Men's Printed Fashion Jackets Korean Style</a></h3>
-									<p class="price"> INR 299</p>
-							</div>
-						</div>
-					</div>
-					<div class="center-responsive col-md-3">
-						<div class="product same-height">
-							<a href="">
-								<img src="admin_area/product_images/product5.jpg" class="img-responsive">
-							</a>
-							<div class="text">
-									<h3><a href="details.php">Men's Printed Fashion Jackets Korean Style</a></h3>
-									<p class="price"> INR 299</p>
-							</div>
-						</div>
-					</div>
-					<div class="center-responsive col-md-3">
-						<div class="product same-height">
-							<a href="">
-								<img src="admin_area/product_images/product6.jpg" class="img-responsive">
-							</a>
-							<div class="text">
-									<h3><a href="details.php">Men's Printed Fashion Jackets Korean Style</a></h3>
-									<p class="price"> INR 299</p>
-							</div>
-						</div>
-					</div>
+					<?php
+					$get_product="select * from products order by 1 DESC LIMIT 0,3";
+						$run_product=mysqli_query($con,$get_product);
+						while ($row_product=mysqli_fetch_array($run_product)) {
+							$pro_id=$row_product['product_id'];
+							$pro_title=$row_product['product_title'];
+							$pro_price=$row_product['product_price'];
+							$pro_img1=$row_product['product_img1'];
+
+							echo"
+
+								<div class='col-md-3 col-sm-6 center responsive'>
+								<div class='product same-height'>
+								<a href='details.php?pro_id=$pro_id'>
+								<img src='admin_area/product_images/$pro_img1' class='img-responsive'
+								</a>
+								<div class='text'>
+								<h3><a href='details.php?pro_id=$pro_id'>$pro_title</a></h3>
+								<p class='price'> INR $pro_price</p>
+								<p class='buttons'> <a href='details.php?pro_id=$pro_id' class='btn btn-default'>
+								View Details
+								</a>
+								</p>
+
+								</div>
+								</div>
+								</div>
+
+							";
+					}
+					?>
 				</div>
 			</div><!---col md 9 End-->
 

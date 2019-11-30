@@ -1,3 +1,8 @@
+<?php
+session_start();
+include("includes/db.php");
+include("functions/functions.php");
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,7 +24,7 @@
 					Welcome Guest
 				</a>
 				<a href="#">
-					Shopping Cart Total Price: INR 100, Total Items 2
+					Shopping Cart Total Price: INR 100, Total Items
 				</a>
 			</div>
 			<div class="col-md-6 offer">
@@ -158,7 +163,7 @@
 						</div>
 						<div class="form-group">
 							<label>Contact No.</label>
-							<input type="number" name="c_conatct" required="" class="form-control">
+							<input type="number" name="c_contact" required="" class="form-control">
 						</div>
 						<div class="form-group">
 							<label>Address</label>
@@ -186,3 +191,33 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 	</body>
 </html>
+<?php
+	if (isset($_POST['submit'])) {
+		$c_name=$_POST['c_name'];
+		$c_email=$_POST['c_email'];
+		$c_password=$_POST['c_password'];
+		$c_country=$_POST['c_country'];
+		$c_city=$_POST['c_city'];
+		$c_contact=$_POST['c_contact'];
+		$c_address=$_POST['c_address'];
+		$c_image=$_FILES['c_image']['name'];
+		$c_tmp_image=$_FILES['c_image']['tmp_name'];
+		$c_ip=getUserIP();
+		move_uploaded_file($c_tmp_image, "customer/customer_images/$c_image");
+		$insert_customer="insert into customers (customer_name, customer_email, customer_pass, customer_country, customer_city, customer_conatct, customer_address, customer_image, customer_ip) values ('$c_name','$c_email','$c_password','c_country','c_city','c_contact','c_address','c_image','c_ip'";
+		$run_customer=mysqli_query($con,$insert_customer);
+		$select_cart="select * from cart where ip_add='$c_ip'";
+		$run_cart=mysqli_query($con,$select_cart);
+		$check_cart=mysqli_num_rows($run_cart);
+		if($check_cart>0){
+			$_SESSION['customer_email']=$c_email;
+			echo "<script>alert('You Have Been Registered Successfully!!')</script>";
+			echo "<script>window.open('chekout.php','_self')</script>";
+		}else{
+			$_SESSION['customer_email']=$c_email;
+			echo "<script>alert('You Have Been Registered Successfully!!')</script>";
+			echo "<script>window.open('index.php','_self')</script>";
+		}
+
+	}
+?>

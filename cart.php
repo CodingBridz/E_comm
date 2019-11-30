@@ -1,3 +1,7 @@
+<?php
+include("includes/db.php");
+include("functions/functions.php");
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,7 +23,7 @@
 					Welcome Guest
 				</a>
 				<a href="#">
-					Shopping Cart Total Price: INR 100, Total Items 2
+					Shopping Cart Total Price: INR <?php totalPrice(); ?>, Total Items <?php item();?>
 				</a>
 			</div>
 			<div class="col-md-6 offer">
@@ -28,7 +32,7 @@
 						<a href="customer_registration.php">Register</a>
 					</li>
 					<li>
-						<a href="checkout.php">My Account</a>
+						<a href="customer/my_account.php">My Account</a>
 					</li>
 					<li>
 						<a href="cart.php"> Go to Cart</a>
@@ -96,7 +100,7 @@
 				</div>
 				<a href="cart.php" class="btn btn-primary navbar-btn right">
 					<i class="fa fa-shopping-cart"></i>
-					<span>4 Items in Cart</span>	
+					<span><?php item();?> Items in Cart</span>	
 				</a>
 				<div class="collapse clearfix" id="search">
 					<form class="navbar-form" method="get" action="result.php">
@@ -120,14 +124,21 @@
 			<div class="col-md-12">
 				<ul class="breadcrumb">
 					<li><a href="home.php">Home</a></li>
-					<li>Shop</li>
+					<li>Cart</li>
 				</ul>
 			</div>
 			<div class="col-md-9" id="cart">
 				<div class="box">
 					<form action="cart.php" method="post" enctype="multipart-form-data">
 						<h1>Shopping Cart</h1>
-						<p class="text-muted">Currently you have 3 Items in Your Cart</p>
+						<?php
+						$ip_add=getUserIP();
+						$select_cart="select * from cart where ip_add ='$ip_add'";
+						$run_cart=mysqli_query($con,$select_cart);
+						$count=mysqli_num_rows($run_cart);
+						
+						?>
+						<p class="text-muted">Currently you have <?php echo $count ?> Items in Your Cart</p>
 						<div class="table-responsive">
 							<table class="table">
 								<thead>
@@ -141,45 +152,45 @@
 									</tr>
 								</thead>
 								<tbody>
+									<?php
+									$total=0;
+									while ($record=mysqli_fetch_array($run_cart)) {
+									$pro_id=$record['p_id'];
+									$pro_size=$record['size'];
+									$pro_qty=$record['qty'];
+									$get_product="select * from products where product_id='$pro_id'";
+									$run_product=mysqli_query($con,$get_product);
+									while ($row_product=mysqli_fetch_array($run_product)) {
+										$pro_title=$row_product['product_title'];
+										$pro_price=$row_product['product_price'];
+										$pro_img1=$row_product['product_img1'];
+										$sub_total=$row_product['product_price']*$pro_qty;
+										$total += $sub_total;
+						
+									?>
 									<tr>
 										<td>
-											<img src="admin_area/product_images/product1.jpg">
+											<img src="admin_area/product_images/<?php echo $pro_img1; ?>">
 										</td>
 										<td>
-											Men's Printed Fashion Jackets Korean Style
+											<?php echo $pro_title; ?>
 										</td>
-										<td>2</td>
-										<td>INR 200</td>
-										<td>Large</td>
+										<td><?php echo $pro_qty; ?></td>
+										<td>INR <?php echo $pro_price; ?></td>
+										<td><?php echo $pro_size; ?></td>
 										<td>
-											<input type="checkbox" name="remove[]">
+											<input type="checkbox" name="remove[]" value="<?php echo $pro_id; ?>">
 										</td>
 										<td>
-											INR 400
+											INR <?php echo $sub_total; ?>
 										</td>
 									</tr>
-									<tr>
-										<td>
-											<img src="admin_area/product_images/product2.jpg">
-										</td>
-										<td>
-											Men's Printed Fashion Jackets Korean Style
-										</td>
-										<td>1</td>
-										<td>INR 300</td>
-										<td>Large</td>
-										<td>
-											<input type="checkbox" name="remove[]">
-										</td>
-										<td>
-											INR 300
-										</td>
-									</tr>
+								<?php }} ?>
 								</tbody>
 								<tfoot>
 									<tr>
-										<th colspan="5">Total</th>
-										<th colspan="2">INR 800</th>
+										<th colspan="5">Total Price:</th>
+										<th colspan="2">INR <?php echo $total ?></th>
 									</tr>
 								</tfoot>
 							</table>
@@ -187,20 +198,37 @@
 						<div class="box-footer">
 							<div class="pull-left">
 								<a href="index.php" class="btn btn-primary">
-									<i class="fa fa-chevron-left"></i>Continue Shopping
+									<i class="fa fa-chevron-left"></i> Continue Shopping
 								</a>
 							</div>
 							<div class="pull-right">
 								<button class="btn btn-default" type="submit" name="update" value="Update Cart">
-									<i class="fa fa-refresh">Update Cart</i>
+									<i class="fa fa-refresh"> Update Cart</i>
 								</button>
 								<a href="checkout.php" class="btn btn-primary">
-									Proceed to Checkout<i class="fa fa-chevron-right"></i>
+									Proceed to Checkout <i class="fa fa-chevron-right"></i>
 								</a>
 							</div>
 						</div>
 					</form>
 				</div>
+				<?php
+				function update_cart(){
+					global $con;
+					if (isset($_POST['update'])) {
+						foreach ($_POST['remove'] as $remove_id) {
+							$delete_product="delete from cart where p_id ='$remove_id'";
+							$run_del=mysqli_query($con,$delete_product);
+							if($run_del){
+								echo"<script>window.open('cart.php','_self')</script>";
+							}
+						}
+					}
+
+				}
+
+				echo @$up_cart=update_cart();
+				?>
 				<div id="row same-height-row">
 					<div class="col-md-3 col-sm-6">
 						<div class="box same-height headline">
@@ -252,8 +280,8 @@
 					<table class="table">
 						<tbody>
 							<tr>
-								<td>Order Subtital</td>
-								<th>INR 400</th>
+								<td>Order Subtotal</td>
+								<th>INR <?php echo $total ?></th>
 							</tr>
 							<tr>
 								<td>Shipping and Handeling</td>
@@ -265,7 +293,7 @@
 							</tr>
 							<tr class="total">
 								<td>Total</td>
-								<th>INR 400</th>
+								<th>INR <?php echo $total ?></th>
 							</tr>
 						</tbody>
 					</table>

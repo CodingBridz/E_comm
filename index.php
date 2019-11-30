@@ -1,5 +1,6 @@
 <?php
 include("includes/db.php");
+include("functions/functions.php");
 ?>
 <!DOCTYPE html>
 <html>
@@ -22,7 +23,7 @@ include("includes/db.php");
 					Welcome Guest
 				</a>
 				<a href="#">
-					Shopping Cart Total Price: INR 100, Total Items 2
+					Shopping Cart Total Price: INR <?php totalPrice(); ?>, Total Items <?php item();?>
 				</a>
 			</div>
 			<div class="col-md-6 offer">
@@ -31,7 +32,7 @@ include("includes/db.php");
 						<a href="customer_registration.php">Register</a>
 					</li>
 					<li>
-						<a href="checkout.php">My Account</a>
+						<a href="customer/my_account.php">My Account</a>
 					</li>
 					<li>
 						<a href="cart.php"> Go to Cart</a>
@@ -99,7 +100,7 @@ include("includes/db.php");
 				</div>
 				<a href="cart.php" class="btn btn-primary navbar-btn right">
 					<i class="fa fa-shopping-cart"></i>
-					<span>4 Items in Cart</span>	
+					<span><?php item();?> Items in Cart</span>	
 				</a>
 				<div class="collapse clearfix" id="search">
 					<form class="navbar-form" method="get" action="result.php">
@@ -207,150 +208,9 @@ include("includes/db.php");
 	</div>
 	<div id="content" class="container">
 		<div class="row">
-			<div class="col-sm-4 col-sm-6 single"><!--product start-->
-				<div class="product">
-					<a href="details.php">
-						<img src="admin_area/product_images/product1.jpg" class="img-responsive">
-					</a>
-					<div class="text">
-						<h3><a href="details.php">Men's Printed Fashion Jackets Korean Style</a></h3>
-						<p class="price"> INR 299</p>
-						<p class="buttons">
-							<a href="details.php" class="btn btn-default">View Details</a>
-							<a href="cart.php" class="btn btn-primary">
-								<i class="fa fa-shopping-cart"></i>
-								Add to Cart
-							</a>
-						</p>
-					</div>
-				</div>
-			</div><!--product end-->
-			<div class="col-sm-4 col-sm-6 single"><!--product start-->
-				<div class="product">
-					<a href="details.php">
-						<img src="admin_area/product_images/product4.jpg" class="img-responsive">
-					</a>
-					<div class="text">
-						<h3><a href="details.php">Men's Printed Fashion Jackets Korean Style</a></h3>
-						<p class="price"> INR 299</p>
-						<p class="buttons">
-							<a href="details.php" class="btn btn-default">View Details</a>
-							<a href="cart.php" class="btn btn-primary">
-								<i class="fa fa-shopping-cart"></i>
-								Add to Cart
-							</a>
-						</p>
-					</div>
-				</div>
-			</div><!--product end-->
-			<div class="col-sm-4 col-sm-6 single"><!--product start-->
-				<div class="product">
-					<a href="details.php">
-						<img src="admin_area/product_images/product2.jpg" class="img-responsive">
-					</a>
-					<div class="text">
-						<h3><a href="details.php">Men's Printed Fashion Jackets Korean Style</a></h3>
-						<p class="price"> INR 299</p>
-						<p class="buttons">
-							<a href="details.php" class="btn btn-default">View Details</a>
-							<a href="cart.php" class="btn btn-primary">
-								<i class="fa fa-shopping-cart"></i>
-								Add to Cart
-							</a>
-						</p>
-					</div>
-				</div>
-			</div><!--product end-->
-			<div class="col-sm-4 col-sm-6 single"><!--product start-->
-				<div class="product">
-					<a href="details.php">
-						<img src="admin_area/product_images/product3.jpg" class="img-responsive">
-					</a>
-					<div class="text">
-						<h3><a href="details.php">Men's Printed Fashion Jackets Korean Style</a></h3>
-						<p class="price"> INR 299</p>
-						<p class="buttons">
-							<a href="details.php" class="btn btn-default">View Details</a>
-							<a href="cart.php" class="btn btn-primary">
-								<i class="fa fa-shopping-cart"></i>
-								Add to Cart
-							</a>
-						</p>
-					</div>
-				</div>
-			</div><!--product end-->
-			<div class="col-sm-4 col-sm-6 single"><!--product start-->
-				<div class="product">
-					<a href="details.php">
-						<img src="admin_area/product_images/product7.jpg" class="img-responsive">
-					</a>
-					<div class="text">
-						<h3><a href="details.php">Men's Printed Fashion Jackets Korean Style</a></h3>
-						<p class="price"> INR 299</p>
-						<p class="buttons">
-							<a href="details.php" class="btn btn-default">View Details</a>
-							<a href="cart.php" class="btn btn-primary">
-								<i class="fa fa-shopping-cart"></i>
-								Add to Cart
-							</a>
-						</p>
-					</div>
-				</div>
-			</div><!--product end-->
-			<div class="col-sm-4 col-sm-6 single"><!--product start-->
-				<div class="product">
-					<a href="details.php">
-						<img src="admin_area/product_images/product5.jpg" class="img-responsive">
-					</a>
-					<div class="text">
-						<h3><a href="details.php">Men's Printed Fashion Jackets Korean Style</a></h3>
-						<p class="price"> INR 299</p>
-						<p class="buttons">
-							<a href="details.php" class="btn btn-default">View Details</a>
-							<a href="cart.php" class="btn btn-primary">
-								<i class="fa fa-shopping-cart"></i>
-								Add to Cart
-							</a>
-						</p>
-					</div>
-				</div>
-			</div><!--product end-->
-			<div class="col-sm-4 col-sm-6 single"><!--product start-->
-				<div class="product">
-					<a href="details.php">
-						<img src="admin_area/product_images/product6.jpg" class="img-responsive">
-					</a>
-					<div class="text">
-						<h3><a href="details.php">Men's Printed Fashion Jackets Korean Style</a></h3>
-						<p class="price"> INR 299</p>
-						<p class="buttons">
-							<a href="details.php" class="btn btn-default">View Details</a>
-							<a href="cart.php" class="btn btn-primary">
-								<i class="fa fa-shopping-cart"></i>
-								Add to Cart
-							</a>
-						</p>
-					</div>
-				</div>
-			</div><!--product end-->
-			<div class="col-sm-4 col-sm-6 single"><!--product start-->
-				<div class="product">
-					<a href="details.php">
-						<img src="admin_area/product_images/product8.jpg" class="img-responsive">
-					</a>
-					<div class="text">
-						<h3><a href="details.php">Men's Printed Fashion Jackets Korean Style</a></h3>
-						<p class="price"> INR 299</p>
-						<p class="buttons">
-							<a href="details.php" class="btn btn-default">View Details</a>
-							<a href="cart.php" class="btn btn-primary">
-								<i class="fa fa-shopping-cart"></i>
-								Add to Cart
-							</a>
-						</p>
-					</div>
-				</div>
-			</div><!--product end-->
+			<?php
+			getpro();
+			?>
 		</div>
 	</div>
 	<!---footer start-->

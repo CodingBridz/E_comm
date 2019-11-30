@@ -4,11 +4,9 @@
 	</div>
 	<div class="panel-body">
 		<ul class="nav nav-pills nav-stacked category-menu">
-			<li><a href="shop.php">Jackets</a></li>
-			<li><a href="shop.php">Accessories</a></li>
-			<li><a href="shop.php">Shoes</a></li>
-			<li><a href="shop.php">Coats</a></li>
-			<li><a href="shop.php">T-shirts</a></li>
+			<?php 
+			getpCats();
+			?>
 		</ul>
 	</div>
 </div>
@@ -18,10 +16,9 @@
 	</div>
 	<div class="panel-body">
 		<ul class="nav nav-pills nav-stacked category-menu">
-			<li><a href="shop.php">Men</a></li>
-			<li><a href="shop.php">Women</a></li>
-			<li><a href="shop.php">Kids</a></li>
-			<li><a href="shop.php">Others</a></li>
+			<?php 
+			getCats();
+			?>
 		</ul>
 	</div>
 </div>
